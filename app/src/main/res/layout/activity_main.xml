@@ -5,12 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+    <Button
+        android:id="@+id/tenpixels"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10px"
+        android:onClick="setPixels"/>
+    <Button
+        android:id="@+id/fourteenpixels"
+        app:layout_constraintLeft_toRightOf="@id/tenpixels"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14px"
+        android:onClick="setPixels"/>
+    <Button
+        android:id="@+id/eighteenpixels"
+        app:layout_constraintLeft_toRightOf="@id/fourteenpixels"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18px"
+        android:onClick="setPixels"/>
+    <Button
+        android:id="@+id/reset"
+        app:layout_constraintLeft_toRightOf="@id/eighteenpixels"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset canvas"
+        android:onClick="reset"/>
+    <Button
+        app:layout_constraintTop_toBottomOf="@id/tenpixels"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eraser"
+        android:onClick="eraser"/>
     <SurfaceView
         android:id="@+id/canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </SurfaceView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
