@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Drawme</string>
+    <string name="pick_width">Grosor de lapiz</string>
+    <string name="reset">Reiniciar lienzo</string>
 </resources>

@@ -6,22 +6,26 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.properties.Delegates
 
 
-class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchListener {
+class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
     //layout for drawing
-    lateinit var canvas: SurfaceView
-    lateinit var holder: SurfaceHolder
-    lateinit var trailPaint : Paint
-    lateinit var path: Path
-    var stroke: Float = 12F;
-    var  startX : Float by Delegates.notNull()
-    var startY : Float by Delegates.notNull()
-    var lastX : Float by Delegates.notNull()
-    var lastY : Float by Delegates.notNull()
-    lateinit var mBitmap: Bitmap
+    private lateinit var canvas: SurfaceView
+    private lateinit var holder: SurfaceHolder
+    private lateinit var trailPaint : Paint
+    private lateinit var path: Path
+    private lateinit var widthSlide: SeekBar
+    private lateinit var currentWidth: TextView
+    private var  startX : Float by Delegates.notNull()
+    private var startY : Float by Delegates.notNull()
+    private var lastX : Float by Delegates.notNull()
+    private var lastY : Float by Delegates.notNull()
+    private lateinit var mBitmap: Bitmap
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,19 +39,30 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchLi
         setContentView(R.layout.activity_main)
         
         canvas = findViewById(R.id.canvas)
+        canvas.setZOrderOnTop(true)
+        canvas.holder.setFormat(PixelFormat.TRANSLUCENT)
         canvas.holder.addCallback(this)
         trailPaint = Paint()
-        trailPaint.isAntiAlias = true;
-        trailPaint.isDither = true;
-        trailPaint.color = Color.BLUE;
+        trailPaint.isAntiAlias = true
+        trailPaint.isDither = true
+        trailPaint.color = Color.BLUE
         trailPaint.style = Paint.Style.STROKE
         trailPaint.strokeJoin = Paint.Join.ROUND
         trailPaint.strokeCap = Paint.Cap.ROUND
-        trailPaint.strokeWidth = stroke
+        trailPaint.strokeWidth = 10F
         canvas.setOnTouchListener(this)
+
+        widthSlide = findViewById(R.id.pencilWidth)
+        widthSlide.setOnSeekBarChangeListener(this)
+
+        currentWidth = findViewById(R.id.currentWidthL)
+
+        val width = trailPaint.strokeWidth.toString() + "px"
+        currentWidth.text = width
     }
 
 
+    //Surface overrides
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         val x = event.x.toInt()
@@ -59,7 +74,7 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchLi
             MotionEvent.ACTION_MOVE -> {
 
                 path.quadTo(lastX, lastY, (lastX + event.x) / 2, (lastY + event.y) / 2)
-                draw(event.rawX, event.rawY)
+                draw()
                 lastX = event.x
                 lastY = event.y
             }
@@ -82,11 +97,26 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchLi
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        Log.e("Destroyed", "Canvas was destroyed");
+        Log.e("Destroyed", "Canvas was destroyed")
+    }
+
+    //Seek bar overrides
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        trailPaint.strokeWidth = progress.toFloat()
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        val width = seekBar!!.progress.toString() + "px"
+        currentWidth.text = width
+
     }
 
     //drawing stuff
-    private  fun draw(x: Float, y: Float) {
+    private  fun draw() {
         var canvas = Canvas(mBitmap)
         canvas.drawPath(path, trailPaint)
         canvas = holder.lockCanvas()
@@ -109,22 +139,8 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchLi
         path = Path()
     }
 
-    fun setPixels(view: View){
-        when (view.id) {
-            R.id.tenpixels -> {
-                trailPaint.strokeWidth = 10F
-            }
-            R.id.fourteenpixels -> {
-                trailPaint.strokeWidth = 14F
-            }
-            else -> {
-                trailPaint.strokeWidth = 18F
-            }
-        }
-    }
-
     fun eraser(view: View){
-        val button = view as Button;
+        val button = view as Button
         if(button.text =="Eraser"){
             trailPaint.strokeWidth = 20F
             button.text = "Drawing"
@@ -137,10 +153,10 @@ class MainActivity : AppCompatActivity(), SurfaceHolder.Callback, View.OnTouchLi
 
     fun reset(view: View){
         var canvas = Canvas(mBitmap)
-        val blackPaint = Paint()
-        blackPaint.color = Color.BLACK
-        blackPaint.style = Paint.Style.FILL
-        canvas.drawPaint(blackPaint)
+        val whitePaint = Paint()
+        whitePaint.color = Color.WHITE
+        whitePaint.style = Paint.Style.FILL
+        canvas.drawPaint(whitePaint)
         canvas = holder.lockCanvas()
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         holder.unlockCanvasAndPost(canvas)

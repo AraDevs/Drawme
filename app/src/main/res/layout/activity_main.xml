@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-    <Button
-        android:id="@+id/tenpixels"
-        app:layout_constraintLeft_toLeftOf="parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    android:background="#FFFFFF"
+    >
+    <RelativeLayout
+        android:id="@+id/headers"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="10px"
-        android:onClick="setPixels"/>
-    <Button
-        android:id="@+id/fourteenpixels"
-        app:layout_constraintLeft_toRightOf="@id/tenpixels"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="14px"
-        android:onClick="setPixels"/>
-    <Button
-        android:id="@+id/eighteenpixels"
-        app:layout_constraintLeft_toRightOf="@id/fourteenpixels"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="18px"
-        android:onClick="setPixels"/>
-    <Button
-        android:id="@+id/reset"
-        app:layout_constraintLeft_toRightOf="@id/eighteenpixels"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reset canvas"
-        android:onClick="reset"/>
-    <Button
-        app:layout_constraintTop_toBottomOf="@id/tenpixels"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Eraser"
-        android:onClick="eraser"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/pencilWidthL"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_width"
+            android:textSize="18sp"
+            android:layout_alignParentTop="true">
+        </TextView>
+
+        <SeekBar
+            android:id="@+id/pencilWidth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="10"
+            android:stepSize="2"
+            android:max="35"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_below="@id/pencilWidthL"
+            >
+        </SeekBar>
+        <TextView
+            android:id="@+id/currentWidthL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="asd"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:layout_below="@id/pencilWidth"/>
+        <Button
+            android:id="@+id/reset"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reset"
+            android:onClick="reset"
+            android:layout_below="@id/currentWidthL"/>
+    </RelativeLayout>
     <SurfaceView
         android:id="@+id/canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </SurfaceView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
